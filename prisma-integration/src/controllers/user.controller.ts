@@ -29,9 +29,15 @@ export const updateUser = async (
   res: Response
 ) => {
   try {
-    const user = await updateUserService(parseInt(req.params.id), req.body);
+    // the fields to be updated
+    const { email, name } = req.body;
+    const user = await updateUserService(parseInt(req.params.id), {
+      email,
+      name,
+    });
     res.json(user);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error updating user" });
   }
 };

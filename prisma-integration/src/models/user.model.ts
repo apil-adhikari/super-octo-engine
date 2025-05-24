@@ -12,9 +12,12 @@ export class UserModel {
   }
 
   static async updateUserModel(
-    where: Prisma.UserWhereUniqueInput,
+    userId: number,
     userData: Prisma.UserUpdateInput
   ) {
-    return await prisma.user.update(where, userData);
+    return await prisma.user.update({
+      where: { id: userId },
+      data: userData,
+    });
   }
 }
