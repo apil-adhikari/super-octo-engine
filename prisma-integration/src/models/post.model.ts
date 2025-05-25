@@ -21,4 +21,14 @@ export class PostModel {
   static async deletePostModel(postId: number) {
     return await prisma.post.delete({ where: { id: postId } });
   }
+
+  // get post model
+  static async getPostModel(postId: number) {
+    return await prisma.post.findUnique({ where: { id: postId } });
+  }
+
+  // get all posts model
+  static async getAllPostsModel() {
+    return await prisma.post.findMany();
+  }
 }

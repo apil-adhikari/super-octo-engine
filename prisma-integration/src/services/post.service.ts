@@ -18,3 +18,11 @@ export const updatePostService = async (
 export const deletePostService = async (postId: number) => {
   return await PostModel.deletePostModel(postId);
 };
+
+export const getPostService = async (postId: number) => {
+  return await PostModel.getPostModel(postId);
+};
+
+export const getAllPostsService = async () => {
+  return await PostModel.getAllPostsModel();
+};

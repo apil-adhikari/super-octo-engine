@@ -6,6 +6,8 @@ import {
 import {
   createPostService,
   deletePostService,
+  getAllPostsService,
+  getPostService,
   updatePostService,
 } from "../services/post.service";
 
@@ -71,6 +73,40 @@ export const deletePost = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
+      message: error,
+    });
+  }
+};
+
+// GET ALL POSTS
+export const getPost = async (
+  req: Request<{ id: string }, {}, {}>,
+  res: Response
+) => {
+  try {
+    const postId = parseInt(req.params.id);
+    const data = await getPostService(postId);
+    console.log(data);
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {}
+};
+
+export const getAllPosts = async (req: Request, res: Response) => {
+  try {
+    const data = await getAllPostsService();
+    console.log(data);
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "success",
       message: error,
     });
   }
