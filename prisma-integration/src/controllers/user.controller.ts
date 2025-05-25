@@ -7,6 +7,7 @@ import {
 import {
   createUserService,
   deleteUserService,
+  getAllUsersService,
   getUserService,
   updateUserService,
 } from "../services/user.service";
@@ -81,5 +82,19 @@ export const getUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Error getting user" });
+  }
+};
+
+// GET ALL USERS
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const data = await getAllUsersService();
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error getting users" });
   }
 };

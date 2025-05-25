@@ -34,4 +34,9 @@ export class UserModel {
   static async getUserModel(userId: number) {
     return await prisma.user.findUnique({ where: { id: userId } });
   }
+
+  // get all users
+  static async getAllUsers() {
+    return await prisma.user.findMany();
+  }
 }

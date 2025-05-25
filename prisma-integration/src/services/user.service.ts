@@ -24,3 +24,8 @@ export const deleteUserService = async (userId: number) => {
 export const getUserService = async (userId: number) => {
   return await UserModel.getUserModel(userId);
 };
+
+// get all users service
+export const getAllUsersService = async () => {
+  return await UserModel.getAllUsers();
+};
