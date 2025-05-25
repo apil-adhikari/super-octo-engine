@@ -7,6 +7,7 @@ import {
 import {
   createUserService,
   deleteUserService,
+  getUserService,
   updateUserService,
 } from "../services/user.service";
 
@@ -59,5 +60,26 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error deleting user" });
+  }
+};
+
+// GET USER
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const data = await getUserService(userId);
+    // if (!data) {
+    //   return res.status(404).json({
+    //     status: "fail",
+    //     message: "User not found",
+    //   });
+    // }
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error getting user" });
   }
 };

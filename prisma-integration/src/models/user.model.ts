@@ -29,4 +29,9 @@ export class UserModel {
       where: { id: userId },
     });
   }
+
+  // get user
+  static async getUserModel(userId: number) {
+    return await prisma.user.findUnique({ where: { id: userId } });
+  }
 }

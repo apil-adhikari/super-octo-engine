@@ -19,3 +19,8 @@ export const updateUserService = async (
 export const deleteUserService = async (userId: number) => {
   return await UserModel.deleteUserModel(userId);
 };
+
+// get user service
+export const getUserService = async (userId: number) => {
+  return await UserModel.getUserModel(userId);
+};
