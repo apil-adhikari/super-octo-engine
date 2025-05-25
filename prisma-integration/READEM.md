@@ -18,3 +18,9 @@ Incoming HTTP Request
 Database
 
 ```
+
+✅ Update a User
+✅ Create a User
+
+TODO:
+Delete a User

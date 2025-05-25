@@ -4,7 +4,11 @@ import {
   CreateUserRequest,
   UpdateUserInput,
 } from "../types/user.interface";
-import { createUserService, updateUserService } from "../services/user.service";
+import {
+  createUserService,
+  deleteUserService,
+  updateUserService,
+} from "../services/user.service";
 
 export const createUser = async (
   req: Request<{}, {}, CreateUserInput>,
@@ -12,7 +16,7 @@ export const createUser = async (
 ) => {
   try {
     console.log("In createUser Controller");
-    // call user services
+    // call user servicesr
     const data = await createUserService(req.body);
     console.log(data);
     res.status(200).json({
@@ -39,5 +43,21 @@ export const updateUser = async (
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error updating user" });
+  }
+};
+
+// DELETE USER
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const data = await deleteUserService(userId);
+
+    res.status(204).json({
+      status: "success",
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error deleting user" });
   }
 };
