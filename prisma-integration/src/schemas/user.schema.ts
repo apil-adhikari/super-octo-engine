@@ -7,13 +7,14 @@ const positiveNumberFromString = z
   .transform((val) => parseInt(val, 10));
 
 // Add user
-const addUserSchema = z.object({
-  name: z.string().min(3).max(50),
+export const createUserSchema = z.object({
+  name: z.string(),
   email: z.email(),
 });
 
 // Update user
-const updateUserSchema = z.object({
+export const updateUserSchema = z.object({
+  id: z.number(),
   name: z.string(),
   email: z.email(),
 });
@@ -30,7 +31,7 @@ export const deleteUserSchema = z.object({
 });
 
 // Types
-export type TAddUserSchema = z.infer<typeof addUserSchema>;
+export type TAddUserSchema = z.infer<typeof createUserSchema>;
 export type TUpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type TDeleteUserSchema = z.infer<typeof deleteUserSchema>;
 export type TGetUserSchema = z.infer<typeof getUserSchema>;

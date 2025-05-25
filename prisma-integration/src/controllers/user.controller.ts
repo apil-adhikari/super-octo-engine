@@ -11,22 +11,42 @@ import {
   getUserService,
   updateUserService,
 } from "../services/user.service";
+import { createUserSchema } from "../schemas/user.schema";
 
-export const createUser = async (
-  req: Request<{}, {}, CreateUserInput>,
-  res: Response
-) => {
+// export const createUser = async (
+//   req: Request<{}, {}, CreateUserInput>,
+//   res: Response
+// ) => {
+//   try {
+//     console.log("In createUser Controller");
+//     // call user servicesr
+//     const data = await createUserService(req.body);
+//     console.log(data);
+//     res.status(200).json({
+//       status: "success",
+//       data,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: error });
+//   }
+// };
+// -------------------------------------------------------------- //
+export const createUser = async (req: Request, res: Response) => {
   try {
-    console.log("In createUser Controller");
-    // call user servicesr
-    const data = await createUserService(req.body);
+    // TODO: Difference between .parse and .safeParse
+    const parsedInput = createUserSchema.parse(req.body);
+    const data = await createUserService(parsedInput);
+
     console.log(data);
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       data,
     });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({
+      status: "error",
+      message: error,
+    });
   }
 };
 
