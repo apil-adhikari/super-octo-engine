@@ -1,4 +1,4 @@
-import { email, z } from "zod/v4";
+import { z } from "zod/v4";
 
 // Making certain things positive
 const positiveNumberFromString = z
@@ -12,12 +12,15 @@ export const createUserSchema = z.object({
   email: z.email(),
 });
 
-// Update user
-export const updateUserSchema = z.object({
+export const updateUserSchema = createUserSchema.extend({
   id: z.number(),
-  name: z.string(),
-  email: z.email(),
 });
+// Update user
+// export const updateUserSchema = z.object({
+
+//   name: z.string(),
+//   email: z.email(),
+// });
 
 // get user
 export const getUserSchema = z.object({
@@ -35,3 +38,7 @@ export type TAddUserSchema = z.infer<typeof createUserSchema>;
 export type TUpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type TDeleteUserSchema = z.infer<typeof deleteUserSchema>;
 export type TGetUserSchema = z.infer<typeof getUserSchema>;
+
+// This will allow us to use the only the properties
+// that we need (mainly sets the properties to optional)
+const partialUser: Partial<TUpdateUserSchema> = {};

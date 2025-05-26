@@ -26,3 +26,7 @@ export const getPostService = async (postId: number) => {
 export const getAllPostsService = async () => {
   return await PostModel.getAllPostsModel();
 };
+
+// FIXME: Use older functions rather that using arrow function because it
+// will create additional memory each type we do requests. like this:
+// export function
