@@ -12,10 +12,7 @@ import {
   updatePostService,
 } from "../services/post.service";
 
-export const createPost = async (
-  req: Request<{}, {}, CreatePostInputInterface>,
-  res: Response
-) => {
+export const createPost = async (req: Request, res: Response) => {
   try {
     const data = await createPostService(req.body);
     console.log(data);
@@ -32,10 +29,7 @@ export const createPost = async (
   }
 };
 
-export const updatePost = async (
-  req: Request<{ id: string }, {}, UpdatePostInterface>,
-  res: Response
-) => {
+export const updatePost = async (req: Request, res: Response) => {
   try {
     console.log("HERE at updatePost");
     const postId = parseInt(req.params.id);

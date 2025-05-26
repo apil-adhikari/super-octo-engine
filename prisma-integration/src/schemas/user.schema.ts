@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 // Making certain things positive
 const positiveNumberFromString = z
@@ -9,7 +9,7 @@ const positiveNumberFromString = z
 // Add user
 export const createUserSchema = z.object({
   name: z.string(),
-  email: z.email(),
+  email: z.string(),
 });
 
 export const updateUserSchema = createUserSchema.extend({
@@ -25,7 +25,7 @@ export const updateUserSchema = createUserSchema.extend({
 // get user
 export const getUserSchema = z.object({
   name: z.string(),
-  email: z.email(),
+  email: z.string().email(),
 });
 
 // delete user

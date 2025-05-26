@@ -9,7 +9,7 @@ import { z } from "zod";
 export const postBaseSchema = z.object({
   title: z.string(),
   description: z.string(),
-  content: z.string(),
+  content: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(), // status can be optional
   authorId: z.number(),
 });
@@ -20,19 +20,17 @@ export const createPostSchema = postBaseSchema.extend({});
 // For updates, typically all fiels can optional
 export const updatePostSchema = postBaseSchema.extend({}).partial();
 
-// Zod generated matching TypeScript types
-export type TCreatePostSchema = z.infer<typeof createPostSchema>;
-
-// we can make the the update partial
-export type TUpdatePostSchema = z.infer<typeof updatePostSchema>;
-
-// To make fields partial ***
-// const partialPostUpdate: Partial<TUpdatePostSchema> = {};
-
 // Response Schema:
 export const postResponseSchema = postBaseSchema.extend({
   id: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+// Zod generated matching TypeScript types
+export type TCreatePostSchema = z.infer<typeof createPostSchema>;
+// we can make the the update partial
+export type TUpdatePostSchema = z.infer<typeof updatePostSchema>;
 export type TPostResponseSchema = z.infer<typeof postResponseSchema>;
+// To make fields partial ***
+// const partialPostUpdate: Partial<TUpdatePostSchema> = {};

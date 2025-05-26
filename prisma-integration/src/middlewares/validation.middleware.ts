@@ -1,7 +1,6 @@
+import { z, ZodSchema } from "zod";
+
 import { NextFunction, Request, Response } from "express";
-import { exit } from "process";
-import { z } from "zod/v4";
-import { ZodError } from "zod/v4";
 
 /* TO VALIDATE FIRST USING ZOD
     1) Body
@@ -9,7 +8,9 @@ import { ZodError } from "zod/v4";
     3) Params
 */
 
-export const validateData = (schema: z.ZodObject<any, any>) => {
+// Sinc we are accepting the schema we need to use ZodSchema in the schema type
+
+export const validateData = (schema: ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log("In validate Date Middleware", req.body);
@@ -22,7 +23,7 @@ export const validateData = (schema: z.ZodObject<any, any>) => {
   };
 };
 
-export const validateParams = (schema: z.ZodObject<any, any>) => {
+export const validateParams = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log("In validate params middleware", req.params);
@@ -35,7 +36,7 @@ export const validateParams = (schema: z.ZodObject<any, any>) => {
   };
 };
 
-export const validateQuery = (schema: z.ZodObject<any, any>) => {
+export const validateQuery = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log("In validate query middleware", requestAnimationFrame);
