@@ -24,3 +24,9 @@ Database
 
 TODO:
 Delete a User
+
+## Password Hashing
+
+✅ Hash the password in the service layer, before saving to the database.
+❌ Don't hash in the controller.
+❌ Don't hash in middleware unless it's universally needed.

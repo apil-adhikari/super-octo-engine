@@ -9,7 +9,8 @@ const positiveNumberFromString = z
 // Add user
 export const createUserSchema = z.object({
   name: z.string(),
-  email: z.string(),
+  email: z.string().email(),
+  password: z.string().min(8).max(128),
 });
 
 export const updateUserSchema = createUserSchema.extend({

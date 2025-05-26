@@ -1,4 +1,4 @@
-import { Request, response, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import {
   CreatePostInputInterface,
   UpdatePostInterface,
@@ -12,7 +12,11 @@ import {
   updatePostService,
 } from "../services/post.service";
 
-export const createPost = async (req: Request, res: Response) => {
+export const createPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await createPostService(req.body);
     console.log(data);
@@ -22,6 +26,7 @@ export const createPost = async (req: Request, res: Response) => {
       data,
     });
   } catch (error) {
+    next(error);
     res.status(500).json({
       status: "error",
       message: error,

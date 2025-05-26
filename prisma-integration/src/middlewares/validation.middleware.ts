@@ -15,8 +15,8 @@ export const validateData = (schema: ZodSchema) => {
     try {
       console.log("In validate Date Middleware", req.body);
       schema.parse(req.body);
-      next();
       console.log("validated");
+      next();
     } catch (error) {
       console.log(error);
     }
