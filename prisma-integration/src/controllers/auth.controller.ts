@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { registerUserService } from "../services/auth.service";
 import { createUserSchema } from "../schemas/user.schema";
+import cookieParser from "cookie-parser";
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -8,10 +9,17 @@ const register = async (req: Request, res: Response) => {
     const data = await registerUserService(req.body);
     console.log(data);
     // console.log(data);
-    res.cookie("token", data.token).status(201).json({
-      status: "success",
-      data,
-    });
+    res
+      .cookie("token", data.token, {
+        maxAge: 840000,
+        httpOnly: true,
+        sameSite: true,
+      })
+      .status(201)
+      .json({
+        status: "success",
+        data,
+      });
   } catch (error) {
     res.status(500).json({
       status: "error",
