@@ -44,10 +44,17 @@ const login = async (req: Request, res: Response) => {
     }
 
     console.log("data in controller after returning from service: ", data);
-    res.status(200).json({
-      status: "success",
-      data: data,
-    });
+    res
+      .cookie("token", data?.token, {
+        httpOnly: true,
+        maxAge: 840000,
+        sameSite: true,
+      })
+      .status(200)
+      .json({
+        status: "success",
+        data: data,
+      });
   } catch (error) {
     res.status(500).json({
       status: "error",
