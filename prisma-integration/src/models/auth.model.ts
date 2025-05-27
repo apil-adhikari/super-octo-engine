@@ -15,6 +15,14 @@ class AuthModel {
       },
     });
   }
+
+  static async loginUserModel(userData: Prisma.UserWhereUniqueInput) {
+    return await prisma.user.findUnique({
+      where: {
+        email: userData.email,
+      },
+    });
+  }
 }
 
 export default AuthModel;

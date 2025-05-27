@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import AuthModel from "../models/auth.model";
-import { TAddUserSchema } from "../schemas/user.schema";
+import { TAddUserSchema, TUserLoginSchema } from "../schemas/user.schema";
 import generateToken from "../utils/generateToken";
 
 // Hash Password before creating a user
@@ -26,4 +26,8 @@ export async function registerUserService(userData: TAddUserSchema) {
     data,
     token,
   };
+}
+
+export async function loginUserService(userCredinitials: TUserLoginSchema) {
+  const data = await AuthModel.loginUserModel(userCredinitials);
 }

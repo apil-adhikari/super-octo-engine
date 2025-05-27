@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { registerUserService } from "../services/auth.service";
+import {
+  loginUserService,
+  registerUserService,
+} from "../services/auth.service";
 import { createUserSchema } from "../schemas/user.schema";
 import cookieParser from "cookie-parser";
 
@@ -28,4 +31,10 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-export default { register };
+const login = async (req: Request, res: Response) => {
+  try {
+    const data = await loginUserService(req.body);
+  } catch (error) {}
+};
+
+export default { register, login };

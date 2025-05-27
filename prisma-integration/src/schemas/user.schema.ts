@@ -6,6 +6,13 @@ const positiveNumberFromString = z
   .regex(/^\d+$/, { message: "Must be a positive integer string" })
   .transform((val) => parseInt(val, 10));
 
+// USER DATA CAN BE MADE OF BASE CLASS AND THAT CAN BE EXTENDED FORDWARD
+
+export const userLoginSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
+
 // Add user
 export const createUserSchema = z.object({
   name: z.string(),
@@ -39,6 +46,7 @@ export type TAddUserSchema = z.infer<typeof createUserSchema>;
 export type TUpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type TDeleteUserSchema = z.infer<typeof deleteUserSchema>;
 export type TGetUserSchema = z.infer<typeof getUserSchema>;
+export type TUserLoginSchema = z.infer<typeof userLoginSchema>;
 
 // This will allow us to use the only the properties
 // that we need (mainly sets the properties to optional)
