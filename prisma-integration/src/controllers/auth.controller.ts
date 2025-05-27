@@ -34,7 +34,26 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   try {
     const data = await loginUserService(req.body);
-  } catch (error) {}
+    console.log(data);
+
+    if (!data) {
+      res.status(404).json({
+        status: "fail",
+        message: "Invalid Credintials",
+      });
+    }
+
+    console.log("data in controller after returning from service: ", data);
+    res.status(200).json({
+      status: "success",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error || "Internal Server Error",
+    });
+  }
 };
 
 export default { register, login };

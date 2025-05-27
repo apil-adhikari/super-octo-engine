@@ -22,12 +22,48 @@ export async function registerUserService(userData: TAddUserSchema) {
   });
 
   const token = generateToken(data.id);
-  return {
-    data,
+
+  const response = {
+    user: data,
     token,
   };
+
+  return response;
 }
 
 export async function loginUserService(userCredinitials: TUserLoginSchema) {
   const data = await AuthModel.loginUserModel(userCredinitials);
+
+  // if the data comes (ie. we found the user with email address, we check for the password)
+  // if (!data) {
+  //   console.log(data);
+  // }
+
+  // Check if the entered password match in the database.
+  if (data) {
+    const isCorrectPassword = await bcrypt.compare(
+      userCredinitials.password,
+      data.password
+    );
+    console.log("Password Matches: ", isCorrectPassword);
+
+    if (isCorrectPassword) {
+      const token = generateToken(data.id);
+
+      const response = {
+        user: {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+        },
+        token,
+      };
+
+      return { ...response };
+    } else {
+      return null;
+    }
+
+    console.log("after password check: ", data);
+  }
 }

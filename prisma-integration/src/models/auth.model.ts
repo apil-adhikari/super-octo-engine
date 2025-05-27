@@ -16,6 +16,7 @@ class AuthModel {
     });
   }
 
+  // where UserWhereUniqueInput checks for unique input like for id or email
   static async loginUserModel(userData: Prisma.UserWhereUniqueInput) {
     return await prisma.user.findUnique({
       where: {
