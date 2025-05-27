@@ -25,9 +25,10 @@ enum PostStatus {
 //model
 
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
 
   // ONE USER CAN CREATE MULTIPLE POSTS
   // Post Post[]

@@ -1,8 +1,9 @@
-import { Request, response, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import {
   CreatePostInputInterface,
   UpdatePostInterface,
 } from "../types/post.interface";
+
 import {
   createPostService,
   deletePostService,
@@ -12,8 +13,9 @@ import {
 } from "../services/post.service";
 
 export const createPost = async (
-  req: Request<{}, {}, CreatePostInputInterface>,
-  res: Response
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const data = await createPostService(req.body);
@@ -24,6 +26,7 @@ export const createPost = async (
       data,
     });
   } catch (error) {
+    next(error);
     res.status(500).json({
       status: "error",
       message: error,
@@ -31,10 +34,7 @@ export const createPost = async (
   }
 };
 
-export const updatePost = async (
-  req: Request<{ id: string }, {}, UpdatePostInterface>,
-  res: Response
-) => {
+export const updatePost = async (req: Request, res: Response) => {
   try {
     console.log("HERE at updatePost");
     const postId = parseInt(req.params.id);
