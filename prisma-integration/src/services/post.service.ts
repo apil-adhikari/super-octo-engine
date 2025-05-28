@@ -1,17 +1,17 @@
 import { PostModel } from "../models/post.model";
-import { TCreatePostSchema, TUpdatePostSchema } from "../schemas/post.schema";
+import { TCreatePostInput, TUpdatePostInput } from "../schemas/post.schema";
 import {
   CreatePostInputInterface,
   UpdatePostInterface,
 } from "../types/post.interface";
 
-export const createPostService = async (postData: TCreatePostSchema) => {
+export const createPostService = async (postData: TCreatePostInput) => {
   return await PostModel.createPostModel(postData);
 };
 
 export const updatePostService = async (
   postId: number,
-  updatedPostData: TUpdatePostSchema
+  updatedPostData: TUpdatePostInput
 ) => {
   return await PostModel.updatePostModel(postId, updatedPostData);
 };

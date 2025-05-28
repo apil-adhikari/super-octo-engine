@@ -38,6 +38,7 @@ export const validateData = (schema: ZodSchema) => {
       next();
     } catch (error) {
       console.log(error);
+      next(error);
     }
   };
 };

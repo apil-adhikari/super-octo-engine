@@ -3,7 +3,6 @@ import { ZodError } from "zod";
 import { StatusCode } from "../constants/StatusCodes";
 import { Prisma } from "@prisma/client";
 
-// ✅ Added `: void`  type
 export const globalErrorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
@@ -19,6 +18,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
       message: "Validation Failed",
       errors: err.errors.map((e) => e.message),
     });
+    return; // just return void after sending response
   }
 
   // 2) Prisma Known Request Errors
@@ -30,18 +30,21 @@ export const globalErrorHandler: ErrorRequestHandler = (
           message: "Unique constraint violation.",
           meta: err.meta,
         });
+        return;
 
       case "P2025": // Record not found
         res.status(StatusCode.NOT_FOUND.code).json({
           status: StatusCode.NOT_FOUND.status,
           message: "Record not found.",
         });
+        return;
 
       case "P2003": // Foreign key constraint failed
         res.status(StatusCode.BAD_REQUEST.code).json({
           status: StatusCode.BAD_REQUEST.status,
           message: "Foreign key constraint failed.",
         });
+        return;
 
       default:
         console.error("Unhandled Prisma error:", err);
@@ -49,6 +52,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
           status: StatusCode.INTERNAL_SERVER_ERROR.status,
           message: "Database error occurred.",
         });
+        return;
     }
   }
 

@@ -10,12 +10,7 @@ import {
   validateData,
   validateParams,
 } from "../middlewares/validation.middleware";
-import {
-  createUserSchema,
-  deleteUserSchema,
-  getUserSchema,
-  updateUserSchema,
-} from "../schemas/user.schema";
+import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 
 const userRouter = express.Router();
 
@@ -26,7 +21,7 @@ userRouter
 userRouter
   .route("/:id")
   .patch(validateData(updateUserSchema), updateUser)
-  .delete(validateParams(deleteUserSchema), deleteUser)
-  .get(validateData(getUserSchema), getUser);
+  .delete(deleteUser)
+  .get(getUser);
 
 export default userRouter;

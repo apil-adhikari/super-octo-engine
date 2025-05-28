@@ -2,36 +2,41 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import AuthModel from "../models/auth.model";
-import { TAddUserSchema, TUserLoginSchema } from "../schemas/user.schema";
+import { TCreateUserInput, TUserLoginInput } from "../schemas/user.schema";
 import generateToken from "../utils/generateToken";
+import { User } from "@prisma/client";
 
 // Hash Password before creating a user
 async function hashPassword(plainPassword: string) {
   return bcrypt.hash(plainPassword, 12);
 }
 
-export async function registerUserService(userData: TAddUserSchema) {
+export async function registerUserService(userData: TCreateUserInput) {
   //   console.log(userData);
   //   console.log("in register user service");
 
   const hashedPassword = await hashPassword(userData.password);
 
-  const data = await AuthModel.registerUserModel({
+  const user = await AuthModel.registerUserModel({
     ...userData,
     password: hashedPassword,
   });
 
+  // if (!user) {
+  //   throw new Error("Could not create user");
+  // }
+
   // const token = generateToken(data.id);
 
   const response = {
-    user: data,
+    user,
     // token,
   };
 
   return response;
 }
 
-export async function loginUserService(userCredinitials: TUserLoginSchema) {
+export async function loginUserService(userCredinitials: TUserLoginInput) {
   const data = await AuthModel.loginUserModel(userCredinitials);
 
   // if the data comes (ie. we found the user with email address, we check for the password)
@@ -63,7 +68,7 @@ export async function loginUserService(userCredinitials: TUserLoginSchema) {
         },
         token,
       };
-      return { ...response };
+      return response;
     } else {
       return null;
     }

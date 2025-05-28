@@ -65,5 +65,7 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     // req.user = currentUser;
 
     next();
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 }

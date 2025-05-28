@@ -47,7 +47,7 @@ export const postResponseSchema = postBaseSchema.extend({
 
 // ✅ Type Inference:
 export type TCreatePostInput = z.infer<typeof createPostSchema>;
-export type TCreatePostUpdate = z.infer<typeof updatePostSchema>;
+export type TUpdatePostInput = z.infer<typeof updatePostSchema>;
 export type TPostResponse = z.infer<typeof postResponseSchema>;
 
 // // Zod generated matching TypeScript types
