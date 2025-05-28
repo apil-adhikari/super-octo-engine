@@ -2,7 +2,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import AuthModel from "../models/auth.model";
-import { TCreateUserInput, TUserLoginInput } from "../schemas/user.schema";
+import {
+  TCreateUserInput,
+  TUserLoginInput,
+  TUserParam,
+} from "../schemas/user.schema";
 import generateToken from "../utils/generateToken";
 import { User } from "@prisma/client";
 
@@ -76,3 +80,8 @@ export async function loginUserService(userCredinitials: TUserLoginInput) {
     console.log("after password check: ", data);
   }
 }
+
+// export async function logoutUserService(userId:TUserParam)
+//  {
+
+//  }

@@ -70,3 +70,4 @@ export type TCreateUserInput = z.infer<typeof createUserSchema>;
 export type TUpdateUserInput = z.infer<typeof updateUserSchema>;
 export type TUserLoginInput = z.infer<typeof userLoginSchema>;
 export type TUserResponse = z.infer<typeof userResponseSchema>;
+export type TUserParam = z.infer<typeof userParamSchema>;

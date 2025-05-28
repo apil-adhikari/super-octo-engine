@@ -24,6 +24,18 @@
 //   }
 // };
 
+// export default { register, login };
+
+// -------------------------------------------------------------------------------------------------------------//
+
+import { NextFunction, Request, Response } from "express";
+import { TCreateUserInput } from "../schemas/user.schema";
+import {
+  loginUserService,
+  registerUserService,
+} from "../services/auth.service";
+import { StatusCode } from "../constants/StatusCodes";
+
 export const login = async (
   req: Request,
   res: Response,
@@ -54,19 +66,6 @@ export const login = async (
     next(error);
   }
 };
-
-// export default { register, login };
-
-// -------------------------------------------------------------------------------------------------------------//
-
-import { NextFunction, Request, Response } from "express";
-import { TCreateUserInput } from "../schemas/user.schema";
-import {
-  loginUserService,
-  registerUserService,
-} from "../services/auth.service";
-import { StatusCode } from "../constants/StatusCodes";
-
 // REGISTER CONTROLLER:
 export async function register(
   req: Request<{}, {}, TCreateUserInput>,
@@ -86,4 +85,13 @@ export async function register(
     console.log("error in auth: ", error);
     next(error);
   }
+}
+
+export async function logout(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = res.cookie("token", "loggedout", {
+      httpOnly: true,
+      sameSite: true,
+    });
+  } catch (error) {}
 }

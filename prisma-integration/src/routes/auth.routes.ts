@@ -1,7 +1,7 @@
 import express from "express";
 import { validateData } from "../middlewares/validation.middleware";
 import { createUserSchema, userLoginSchema } from "../schemas/user.schema";
-import { login, register } from "../controllers/auth.controller";
+import { login, logout, register } from "../controllers/auth.controller";
 
 const authRouter = express.Router();
 
@@ -9,5 +9,6 @@ const authRouter = express.Router();
 authRouter.post("/register", validateData(createUserSchema), register);
 
 authRouter.post("/login", validateData(userLoginSchema), login);
+authRouter.post("/logout", logout);
 
 export default authRouter;
