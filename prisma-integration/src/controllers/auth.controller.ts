@@ -1,47 +1,44 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   loginUserService,
   registerUserService,
 } from "../services/auth.service";
 import { createUserSchema } from "../schemas/user.schema";
 import cookieParser from "cookie-parser";
+import { StatusCode } from "../constants/StatusCodes";
 
-const register = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // console.log("In register user controller");
     const data = await registerUserService(req.body);
-    console.log(data);
-    // console.log(data);
-    res
-      .cookie("token", data.token, {
-        maxAge: 840000,
-        httpOnly: true,
-        sameSite: true,
-      })
-      .status(201)
-      .json({
-        status: "success",
-        data,
-      });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
+    console.log("---AUTH CONTROLLER: REGISTER data---\n", data);
+
+    res.status(201).json({
+      status: "success",
+      data,
     });
+  } catch (error) {
+    // TODO: handle this in global error handler instead of using the catch async function
+    next(error);
   }
 };
 
-const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    throw Error("check");
     const data = await loginUserService(req.body);
+
     console.log(data);
 
     if (!data) {
-      res.status(404).json({
-        status: "fail",
-        message: "Invalid Credintials",
-      });
+      next("Invalid credentials");
     }
+
+    // if (!data) {
+    //   res.status(StatusCode.NOT_FOUND.code).json({
+    //     status: StatusCode.NOT_FOUND.status,
+    //     message: "Invalid Credintials",
+    //   });
+    // }
 
     console.log("data in controller after returning from service: ", data);
     res
@@ -56,10 +53,7 @@ const login = async (req: Request, res: Response) => {
         data: data,
       });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error || "Internal Server Error",
-    });
+    next(error);
   }
 };
 

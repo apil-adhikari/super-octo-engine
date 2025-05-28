@@ -6,14 +6,17 @@ const prisma = new PrismaClient();
 class AuthModel {
   // register user
   static async registerUserModel(userData: Prisma.UserCreateInput) {
-    // console.log("In register model", userData);
-    return await prisma.user.create({
-      data: userData,
-      // We should not send the password in response
-      omit: {
-        password: true,
-      },
-    });
+    try {
+      const newUser = await prisma.user.create({
+        data: userData,
+        omit: {
+          password: true,
+        },
+      });
+
+      if (!newUser) {
+      }
+    } catch (error) {}
   }
 
   // where UserWhereUniqueInput checks for unique input like for id or email

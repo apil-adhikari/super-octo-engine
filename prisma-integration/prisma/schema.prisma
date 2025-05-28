@@ -23,7 +23,6 @@ enum PostStatus {
 }
 
 //model
-
 model User {
   id       Int    @id @default(autoincrement())
   name     String

@@ -30,3 +30,7 @@ Delete a User
 ✅ Hash the password in the service layer, before saving to the database.
 ❌ Don't hash in the controller.
 ❌ Don't hash in middleware unless it's universally needed.
+
+---
+
+Declaration Mergin: to add anything in the req.body because typescript doesnot allow us to directly create new data in req body

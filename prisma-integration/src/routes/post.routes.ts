@@ -12,15 +12,17 @@ import {
   postResponseSchema,
   updatePostSchema,
 } from "../schemas/post.schema";
+import { protect } from "../middlewares/protect.middleware";
 
 const postRouter = express.Router();
 // postRouter.route("/").post(createPost).get(getAllPosts);
 // postRouter.route("/:id").patch(updatePost).delete(deletePost).get(getPost);
 
 postRouter.get("/", getAllPosts);
-postRouter.post("/", validateData(createPostSchema), createPost);
 postRouter.get("/:id", getPost);
-postRouter.patch("/:id", validateData(updatePostSchema), updatePost);
-postRouter.delete("/:id", deletePost);
+
+postRouter.post("/", protect, validateData(createPostSchema), createPost);
+postRouter.patch("/:id", protect, validateData(updatePostSchema), updatePost);
+postRouter.delete("/:id", protect, deletePost);
 
 export default postRouter;

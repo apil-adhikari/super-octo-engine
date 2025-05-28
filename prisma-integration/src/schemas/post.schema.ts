@@ -6,9 +6,17 @@
 
 import { z } from "zod";
 
+/*
+Using generate enums from prisma instead of hardcoded enum values:
+Avoids typos.
+Syncs directly with Prisma (if you change enum values later).
+Ensures consistency between backend logic and DB.
+*/
+import { PostStatus } from "@prisma/client"; // We can use types provided by prisma
+
 export const postBaseSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
   content: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(), // status can be optional
   authorId: z.number(),

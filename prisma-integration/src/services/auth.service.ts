@@ -21,11 +21,11 @@ export async function registerUserService(userData: TAddUserSchema) {
     password: hashedPassword,
   });
 
-  const token = generateToken(data.id);
+  // const token = generateToken(data.id);
 
   const response = {
     user: data,
-    token,
+    // token,
   };
 
   return response;
@@ -47,6 +47,11 @@ export async function loginUserService(userCredinitials: TUserLoginSchema) {
     );
     console.log("Password Matches: ", isCorrectPassword);
 
+    // If not correct password throw error
+    if (!isCorrectPassword) {
+      throw Error("Invalid credentials.");
+    }
+
     if (isCorrectPassword) {
       const token = generateToken(data.id);
 
@@ -58,7 +63,6 @@ export async function loginUserService(userCredinitials: TUserLoginSchema) {
         },
         token,
       };
-
       return { ...response };
     } else {
       return null;
