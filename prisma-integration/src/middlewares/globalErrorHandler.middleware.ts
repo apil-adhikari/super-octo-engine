@@ -3,20 +3,21 @@ import { ZodError } from "zod";
 import { StatusCode } from "../constants/StatusCodes";
 import { Prisma } from "@prisma/client";
 
+// ✅ Added `: void`  type
 export const globalErrorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   console.error("-- In global error handler function --: ", err);
 
   // 1) Zod Validation Error
   if (err instanceof ZodError) {
-    return res.status(StatusCode.BAD_REQUEST.code).json({
+    res.status(StatusCode.BAD_REQUEST.code).json({
       status: StatusCode.BAD_REQUEST.status,
       message: "Validation Failed",
-      errors: err.errors.map((e) => e.message), // better than raw .message
+      errors: err.errors.map((e) => e.message),
     });
   }
 
@@ -24,27 +25,27 @@ export const globalErrorHandler: ErrorRequestHandler = (
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     switch (err.code) {
       case "P2002": // Unique constraint violation
-        return res.status(StatusCode.CONFLICT.code).json({
+        res.status(StatusCode.CONFLICT.code).json({
           status: StatusCode.CONFLICT.status,
           message: "Unique constraint violation.",
           meta: err.meta,
         });
 
       case "P2025": // Record not found
-        return res.status(StatusCode.NOT_FOUND.code).json({
+        res.status(StatusCode.NOT_FOUND.code).json({
           status: StatusCode.NOT_FOUND.status,
           message: "Record not found.",
         });
 
       case "P2003": // Foreign key constraint failed
-        return res.status(StatusCode.BAD_REQUEST.code).json({
+        res.status(StatusCode.BAD_REQUEST.code).json({
           status: StatusCode.BAD_REQUEST.status,
           message: "Foreign key constraint failed.",
         });
 
       default:
         console.error("Unhandled Prisma error:", err);
-        return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+        res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
           status: StatusCode.INTERNAL_SERVER_ERROR.status,
           message: "Database error occurred.",
         });
@@ -52,7 +53,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   }
 
   // 3) Fallback for any other error
-  return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+  res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
     status: "error",
     message: err.message || "Internal Server Error",
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
