@@ -39,15 +39,16 @@ export const login = async (
 
     console.log("data in controller after returning from service: ", data);
     res
-      // .cookie("token", data?.token, {
-      //   httpOnly: true,
-      //   maxAge: 840000,
-      //   sameSite: true,
-      // })
+      .cookie("token", data?.token, {
+        httpOnly: true,
+        maxAge: 840000,
+        sameSite: true,
+      })
       .status(200)
       .json({
+        statusCode: StatusCode.OK.code,
         status: "success",
-        data: data,
+        data,
       });
   } catch (error) {
     next(error);
@@ -77,6 +78,7 @@ export async function register(
     console.log("---AUTH CONTROLLER: REGISTER data---\n", data);
 
     res.status(StatusCode.CREATED.code).json({
+      statusCode: StatusCode.CREATED.code,
       status: StatusCode.CREATED.status,
       data,
     });

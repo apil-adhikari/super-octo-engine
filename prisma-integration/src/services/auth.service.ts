@@ -26,11 +26,11 @@ export async function registerUserService(userData: TCreateUserInput) {
   //   throw new Error("Could not create user");
   // }
 
-  // const token = generateToken(data.id);
+  const token = generateToken(user.id);
 
   const response = {
     user,
-    // token,
+    token,
   };
 
   return response;
