@@ -38,6 +38,11 @@ export const StatusCode = {
     status: "fail",
   }, // Requested resource could not be found,
 
+  CONFLICT: {
+    code: 409,
+    status: StatusEnum.FAIL,
+  },
+
   // 5xx Server Errors
   //Generic error message, given when an unexpected condition was encountered on the server.
   INTERNAL_SERVER_ERROR: {

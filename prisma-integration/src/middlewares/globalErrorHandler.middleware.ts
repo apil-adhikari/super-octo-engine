@@ -1,62 +1,60 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { StatusCode } from "../constants/StatusCodes";
 import { Prisma } from "@prisma/client";
 
-// GLOBAL ERROR HANDLER FUNCTION
-export const globalErrorHandler = (
+export const globalErrorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  console.log("-- In global error handler function --: ", err);
-  //   res.status(500).json({
-  //     status: "error",
-  //     message: err || "Internal Server Error",
-  //   });
+  console.error("-- In global error handler function --: ", err);
 
-  //   Handle Errors:
-  //   1) Custom Error
-  //   if (err instanceof AppError) {
-  //     // Data that come from AppError class
-  //     const { statusCode, status, message } = err;
-
-  //     res.status(statusCode).json({
-  //       status,
-  //       message: message,
-  //     });
-  //   }
-
-  //   ---------------------------------//
-  //   1) Zod Error
+  // 1) Zod Validation Error
   if (err instanceof ZodError) {
-    res.status(StatusCode.BAD_REQUEST.code).json({
+    return res.status(StatusCode.BAD_REQUEST.code).json({
       status: StatusCode.BAD_REQUEST.status,
       message: "Validation Failed",
-      err: err.message,
+      errors: err.errors.map((e) => e.message), // better than raw .message
     });
   }
 
-  //  2) Prisma Error:
+  // 2) Prisma Known Request Errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    if (err.code === "P2002") {
-      res.status(StatusCode.BAD_REQUEST.code).json({
-        status: StatusCode.BAD_REQUEST.status,
-        message: err,
-      });
+    switch (err.code) {
+      case "P2002": // Unique constraint violation
+        return res.status(StatusCode.CONFLICT.code).json({
+          status: StatusCode.CONFLICT.status,
+          message: "Unique constraint violation.",
+          meta: err.meta,
+        });
+
+      case "P2025": // Record not found
+        return res.status(StatusCode.NOT_FOUND.code).json({
+          status: StatusCode.NOT_FOUND.status,
+          message: "Record not found.",
+        });
+
+      case "P2003": // Foreign key constraint failed
+        return res.status(StatusCode.BAD_REQUEST.code).json({
+          status: StatusCode.BAD_REQUEST.status,
+          message: "Foreign key constraint failed.",
+        });
+
+      default:
+        console.error("Unhandled Prisma error:", err);
+        return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+          status: StatusCode.INTERNAL_SERVER_ERROR.status,
+          message: "Database error occurred.",
+        });
     }
-
-    // res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
-    //   status: StatusCode.INTERNAL_SERVER_ERROR.status,
-    //   message: "Internal Server Error",
-    // });
-
-    next();
   }
 
-  res.status(StatusCode.BAD_REQUEST.code).json({
-    status: StatusCode.BAD_REQUEST.status,
-    message: err,
+  // 3) Fallback for any other error
+  return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+    status: "error",
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 };
