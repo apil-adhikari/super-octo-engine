@@ -17,7 +17,6 @@ export class PostModel {
     });
   }
 
-  // delete post model
   static async deletePostModel(postId: number) {
     return await prisma.post.delete({ where: { id: postId } });
   }

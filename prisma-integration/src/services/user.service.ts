@@ -1,6 +1,6 @@
 // import { UserModel } from "../models/user.model";
 import { UserModel } from "../models/user.model";
-import { TAddUserSchema, TUpdateUserSchema } from "../schemas/user.schema";
+import { TCreateUserInput, TUpdateUserInput } from "../schemas/user.schema";
 import { CreateUserInput, UpdateUserInput } from "../types/user.interface";
 
 // create user service
@@ -8,14 +8,14 @@ import { CreateUserInput, UpdateUserInput } from "../types/user.interface";
 //   return await UserModel.createUserModel(userData);
 // };
 
-export const createUserService = async (userData: TAddUserSchema) => {
+export const createUserService = async (userData: TCreateUserInput) => {
   return await UserModel.createUserModel(userData);
 };
 
 // update user service
 export const updateUserService = async (
   userId: number,
-  userData: UpdateUserInput
+  userData: TUpdateUserInput
 ) => {
   return await UserModel.updateUserModel(userId, userData);
 };
