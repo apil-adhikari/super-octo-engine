@@ -3,52 +3,68 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export interface JwtUserPayload extends JwtPayload {
-  id: number;
-}
+// export interface JwtUserPayload extends JwtPayload {
+//   id: number;
+// }
 
+export interface AuthRequest extends Request {
+  user?: {
+    id: number;
+  };
+}
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "";
 
-export async function protect(req: Request, res: Response, next: NextFunction) {
+export async function protect(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("In protecte middleware:");
+  let token: string = "";
+  console.log(req.headers);
+  // check in request header and as well as in cookies if the token exists
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  }
+
+  if (!token) {
+    // res.status(401).json({
+    //   status: "fail",
+    //   message: "Not authorized, token missing",
+    // });
+
+    throw new Error("Access token missing!");
+  }
+
   try {
-    console.log("In protecte middleware:");
-    let token: string = "";
-    // check in request header and as well as in cookies if the token exists
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    } else if (req.cookies && req.cookies.token) {
-      token = req.cookies.token;
-    }
-
-    if (!token) {
-      res.status(401).json({
-        status: "fail",
-        message: "Not authorized, token missing",
-      });
-    }
-
     // Get the decoded value using jwt and verify it:
     const decoded = jwt.verify(token, JWT_SECRET_KEY) as JwtPayload;
-    console.log(decoded.id);
+    console.log("USER ID: ", decoded.id);
 
     if (!decoded) {
-      res.status(401).json({
-        status: "fail",
-        message: "token expired,please login again",
-      });
+      throw new Error("token expired,please login again");
     }
 
-    // CHECK IF THERE IS USER ASSOCIATED WITH THAT TOKEN:
+    // FIXME: Confirm should I check the if the user exists with that id in the database?
+    // PROBLEM: since we use models for db operation,
+    // should we be checking if user exists here in protect middleware?
+    // CHECK IF THERE IS USER ASSOCIATED WITH THAT TOKEN:[]
     const currentUser = await prisma.user.findUnique({
       where: {
         id: decoded.id,
       },
     });
 
-    // TODO: How do I do this type of checks???
+    if (!currentUser) {
+      throw new Error("The user belonging to this token does no loger exists.");
+    }
+
+    // // TODO: How do I do this type of checks???
     // if (!currentUser) {
     //   return res.status(401).json({
     //     status: "fail",
@@ -61,8 +77,15 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     */
 
     //  If we have user logged in, we grant access to do certain operations:
-    // req.user = currentUser; // we cannot do this: ❌ Property 'user' does not exist on type 'Request'
-    // req.user = currentUser;
+    // req.user = currentUser; // req.user.id = currentUser.id;
+
+    // ATTACH TO THE req
+    // req ma user xa vanye, we put the decoded id in the req.user.id
+
+    req.user = {
+      id: currentUser.id,
+    };
+    console.log("REQUEST . USER -> ", req.user.id);
 
     next();
   } catch (error) {

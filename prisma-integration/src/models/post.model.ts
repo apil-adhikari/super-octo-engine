@@ -4,7 +4,9 @@ const prisma = new PrismaClient();
 
 export class PostModel {
   static async createPostModel(postData: Prisma.PostUncheckedCreateInput) {
-    return await prisma.post.create({ data: postData });
+    return await prisma.post.create({
+      data: postData,
+    });
   }
 
   static async updatePostModel(

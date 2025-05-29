@@ -1,6 +1,7 @@
 import { z, ZodSchema } from "zod";
 
 import { NextFunction, Request, Response } from "express";
+import { AuthRequest } from "./protect.middleware";
 
 /* TO VALIDATE FIRST USING ZOD
     1) Body
@@ -27,13 +28,19 @@ import { NextFunction, Request, Response } from "express";
 //   };
 // };
 
-// Sinc we are accepting the schema we need to use ZodSchema in the schema type
+// Since we are accepting the schema we need to use ZodSchema in the schema type
 
 export const validateData = (schema: ZodSchema) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      console.log("In validate Date Middleware", req.body);
-      schema.parse(req.body);
+      // console.log("In validate Date Middleware", req.body);
+
+      const updatedBodyData = {
+        ...req.body,
+        authorId: req.user?.id,
+      };
+
+      schema.parse(updatedBodyData);
       console.log("validated");
       next();
     } catch (error) {

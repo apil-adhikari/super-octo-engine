@@ -1,10 +1,10 @@
-import * as Express from "express";
-import { User } from "@prisma/client";
+// import * as express from "express";
+// import { User } from "@prisma/client";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-    }
-  }
-}
+// declare global {
+//   namespace express {
+//     interface Request {
+//       user: User;
+//     }
+//   }
+// }

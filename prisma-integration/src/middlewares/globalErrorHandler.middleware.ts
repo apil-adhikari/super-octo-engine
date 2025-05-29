@@ -15,7 +15,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   if (err instanceof ZodError) {
     res.status(StatusCode.BAD_REQUEST.code).json({
       status: StatusCode.BAD_REQUEST.status,
-      message: "Validation Failed",
+      message: err,
       errors: err.errors.map((e) => e.message),
     });
     return; // just return void after sending response

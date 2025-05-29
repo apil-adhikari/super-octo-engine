@@ -4,6 +4,8 @@ import {
   UpdatePostInterface,
 } from "../types/post.interface";
 
+import { AuthRequest } from "../middlewares/protect.middleware";
+
 import {
   createPostService,
   deletePostService,
@@ -13,12 +15,17 @@ import {
 } from "../services/post.service";
 
 export const createPost = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const data = await createPostService(req.body);
+    console.log("In create post: ", req.user?.id);
+    const data = await createPostService({
+      ...req.body,
+      authorId: req.user?.id,
+    });
+
     console.log(data);
 
     res.status(201).json({
