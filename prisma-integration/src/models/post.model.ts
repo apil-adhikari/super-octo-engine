@@ -74,7 +74,15 @@ export class PostModel {
 
   // get post model
   static async getPostModel(postId: number) {
-    return await prisma.post.findUnique({ where: { id: postId } });
+    const existingPost = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!existingPost) {
+      throw new Error(`No post found with the id of ${postId}`);
+    }
+
+    return existingPost;
   }
 
   // get all posts model

@@ -89,7 +89,7 @@ export const deletePost = async (
 
     const postId: number = parseInt(req.params.id);
 
-    await deletePostService(postId, userId);
+    const data = await deletePostService(postId, userId);
 
     res.status(StatusCode.DELETED.code).json({
       statusCode: StatusCode.DELETED.code,
@@ -104,7 +104,8 @@ export const deletePost = async (
 // GET ALL POSTS
 export const getPost = async (
   req: Request<{ id: string }, {}, {}>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const postId = parseInt(req.params.id);
@@ -115,10 +116,16 @@ export const getPost = async (
       status: "success",
       data,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getAllPosts = async (req: Request, res: Response) => {
+export const getAllPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await getAllPostsService();
     console.log(data);
@@ -128,9 +135,6 @@ export const getAllPosts = async (req: Request, res: Response) => {
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "success",
-      message: error,
-    });
+    next(error);
   }
 };
