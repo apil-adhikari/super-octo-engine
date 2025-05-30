@@ -30,8 +30,9 @@ export const createPost = async (
 
     console.log(data);
 
-    res.status(201).json({
-      status: "success",
+    res.status(StatusCode.CREATED.code).json({
+      statusCode: StatusCode.CREATED.code,
+      status: StatusCode.CREATED.status,
       data,
     });
   } catch (error) {
@@ -62,8 +63,9 @@ export const updatePost = async (
       authorId: req.user?.id, // we need to get the logged
     });
 
-    res.status(200).json({
-      status: "success",
+    res.status(StatusCode.ACCEPTED.code).json({
+      StatusCode: StatusCode.ACCEPTED.code,
+      status: StatusCode.ACCEPTED.status,
       data,
     });
   } catch (error) {
