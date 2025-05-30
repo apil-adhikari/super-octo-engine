@@ -31,9 +31,11 @@ import { AuthRequest } from "./protect.middleware";
 // Since we are accepting the schema we need to use ZodSchema in the schema type
 
 export const validateData = (schema: ZodSchema) => {
+  // console.log("validating");
   return (req: AuthRequest, res: Response, next: NextFunction) => {
+    console.log("test");
     try {
-      // console.log("In validate Date Middleware", req.body);
+      console.log("In validate Date Middleware", req.body);
 
       const updatedBodyData = {
         ...req.body,

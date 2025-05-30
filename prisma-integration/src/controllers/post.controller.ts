@@ -41,28 +41,32 @@ export const createPost = async (
   }
 };
 
-export const updatePost = async (req: Request, res: Response) => {
+export const updatePost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    console.log("HERE at updatePost");
-    const postId = parseInt(req.params.id);
+    const postId = parseInt(req.params.id); // post to update
+
+    // Data to be updated(selective data)
     const { title, description, content, status } = req.body;
+
     const data = await updatePostService(postId, {
       title,
       description,
       content,
       status,
+      authorId: req.user?.id, // we need to get the logged
     });
 
-    console.log(data);
     res.status(200).json({
       status: "success",
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    console.log(error);
+    next(error);
   }
 };
 

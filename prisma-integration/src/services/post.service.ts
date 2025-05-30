@@ -11,9 +11,9 @@ export const createPostService = async (postData: TCreatePostInput) => {
 
 export const updatePostService = async (
   postId: number,
-  updatedPostData: TUpdatePostInput
+  updatePostData: TUpdatePostInput
 ) => {
-  return await PostModel.updatePostModel(postId, updatedPostData);
+  return await PostModel.updatePostModel(postId, updatePostData);
 };
 
 export const deletePostService = async (postId: number) => {

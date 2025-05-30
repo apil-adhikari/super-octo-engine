@@ -11,11 +11,37 @@ export class PostModel {
 
   static async updatePostModel(
     postId: number,
-    updatedPostData: Prisma.PostUpdateInput
+    updatePostData: Prisma.PostUncheckedUpdateInput
   ) {
+    // Check for existing post
+    const existingPost = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    // If no post found, throw error
+    if (!existingPost) {
+      console.log("No post found");
+      throw new Error(`No post found with id ${postId}.`);
+    }
+
+    // Check if the user trying to update the post is the author of the post
+    // console.log("author trying to update: ", typeof updatePostData.authorId);
+    // console.log("Actual Author: ", typeof existingPost.authorId);
+    // console.log(updatePostData);
+
+    // Check if the author of the post in db matches the user trying to update it
+    if (existingPost.authorId != updatePostData.authorId) {
+      throw new Error(
+        "You are not the owner/author of this post. You cannot update this post"
+      );
+    }
+
+    // else we update the post data
     return await prisma.post.update({
       where: { id: postId },
-      data: updatedPostData,
+      data: updatePostData,
     });
   }
 

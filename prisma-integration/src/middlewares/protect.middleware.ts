@@ -41,6 +41,8 @@ export async function protect(
     throw new Error("Access token missing!");
   }
 
+  console.log("TOKEN: ", token);
+
   try {
     // Get the decoded value using jwt and verify it:
     const decoded = jwt.verify(token, JWT_SECRET_KEY) as JwtPayload;

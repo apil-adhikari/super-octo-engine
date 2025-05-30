@@ -23,6 +23,7 @@ postRouter.get("/:id", getPost);
 
 postRouter.post("/", protect, validateData(createPostSchema), createPost);
 postRouter.patch("/:id", protect, validateData(updatePostSchema), updatePost);
+
 postRouter.delete("/:id", protect, deletePost);
 
 export default postRouter;
