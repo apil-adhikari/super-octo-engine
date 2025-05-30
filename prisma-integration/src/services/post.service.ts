@@ -16,8 +16,8 @@ export const updatePostService = async (
   return await PostModel.updatePostModel(postId, updatePostData);
 };
 
-export const deletePostService = async (postId: number) => {
-  return await PostModel.deletePostModel(postId);
+export const deletePostService = async (postId: number, userId: number) => {
+  return await PostModel.deletePostModel(postId, userId);
 };
 
 export const getPostService = async (postId: number) => {

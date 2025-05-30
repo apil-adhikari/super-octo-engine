@@ -23,6 +23,12 @@ export const StatusCode = {
     code: 202,
     status: StatusEnum.SUCCESS,
   }, // Request has been received but not yet acted upon
+
+  DELETED: {
+    code: 204,
+    status: StatusEnum.SUCCESS,
+  },
+
   // 4xx Client Errors
   BAD_REQUEST: {
     code: 400,

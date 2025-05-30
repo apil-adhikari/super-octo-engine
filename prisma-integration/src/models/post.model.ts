@@ -45,8 +45,31 @@ export class PostModel {
     });
   }
 
-  static async deletePostModel(postId: number) {
-    return await prisma.post.delete({ where: { id: postId } });
+  static async deletePostModel(postId: number, userId: number) {
+    const existingPost = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!existingPost) {
+      throw new Error(`No post found with id of ${postId} to delete.`);
+    }
+
+    console.log(existingPost.authorId);
+    console.log(userId);
+
+    // Check if the user trying to delete the post is the author of the post
+    if (existingPost.authorId !== userId) {
+      throw new Error(
+        "Unauthorized. You are not the owner of this post. So, you cannot delete this post."
+      );
+    }
+
+    // Finally, delete the post
+    return await prisma.post.delete({
+      where: {
+        id: existingPost.id,
+      },
+    });
   }
 
   // get post model

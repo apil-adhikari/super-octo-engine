@@ -13,6 +13,8 @@ import {
   getPostService,
   updatePostService,
 } from "../services/post.service";
+import { number } from "zod";
+import { StatusCode } from "../constants/StatusCodes";
 
 export const createPost = async (
   req: AuthRequest,
@@ -71,21 +73,29 @@ export const updatePost = async (
 };
 
 export const deletePost = async (
-  req: Request<{ id: string }, {}, {}>,
-  res: Response
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id);
-    const data = await deletePostService(postId);
-    res.status(204).json({
-      status: "success",
+    console.log("Logged in user: ", req.user?.id);
+    if (!req.user?.id) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = req.user.id;
+
+    const postId: number = parseInt(req.params.id);
+
+    await deletePostService(postId, userId);
+
+    res.status(StatusCode.DELETED.code).json({
+      statusCode: StatusCode.DELETED.code,
+      status: StatusCode.DELETED.status,
       message: "Post deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    next(error);
   }
 };
 

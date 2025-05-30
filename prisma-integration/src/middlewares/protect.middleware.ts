@@ -38,7 +38,9 @@ export async function protect(
     //   message: "Not authorized, token missing",
     // });
 
-    throw new Error("Access token missing!");
+    throw new Error(
+      "Access token missing! Please login again to get access token."
+    );
   }
 
   console.log("TOKEN: ", token);
