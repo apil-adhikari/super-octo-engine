@@ -1,4 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { AppError } from "../utils/appError";
+import { StatusCode } from "../constants/StatusCodes";
 
 const prisma = new PrismaClient();
 
@@ -23,7 +25,10 @@ export class PostModel {
     // If no post found, throw error
     if (!existingPost) {
       console.log("No post found");
-      throw new Error(`No post found with id ${postId}.`);
+      throw new AppError(
+        `No post found with id ${postId}.`,
+        StatusCode.NOT_FOUND.code
+      );
     }
 
     // Check if the user trying to update the post is the author of the post
@@ -33,8 +38,9 @@ export class PostModel {
 
     // Check if the author of the post in db matches the user trying to update it
     if (existingPost.authorId != updatePostData.authorId) {
-      throw new Error(
-        "You are not the owner/author of this post. You cannot update this post"
+      throw new AppError(
+        "You are not the owner/author of this post. You cannot update this post",
+        StatusCode.FORBIDDEN.code
       );
     }
 
@@ -51,7 +57,10 @@ export class PostModel {
     });
 
     if (!existingPost) {
-      throw new Error(`No post found with id of ${postId} to delete.`);
+      throw new AppError(
+        `No post found with id of ${postId} to delete.`,
+        StatusCode.NOT_FOUND.code
+      );
     }
 
     console.log(existingPost.authorId);
@@ -59,8 +68,9 @@ export class PostModel {
 
     // Check if the user trying to delete the post is the author of the post
     if (existingPost.authorId !== userId) {
-      throw new Error(
-        "Unauthorized. You are not the owner of this post. So, you cannot delete this post."
+      throw new AppError(
+        "Unauthorized. You are not the owner of this post. So, you cannot delete this post.",
+        StatusCode.FORBIDDEN.code
       );
     }
 
@@ -79,7 +89,10 @@ export class PostModel {
     });
 
     if (!existingPost) {
-      throw new Error(`No post found with the id of ${postId}`);
+      throw new AppError(
+        `No post found with the id of ${postId}`,
+        StatusCode.NOT_FOUND.code
+      );
     }
 
     return existingPost;

@@ -9,6 +9,8 @@ import {
 } from "../schemas/user.schema";
 import generateToken from "../utils/generateToken";
 import { User } from "@prisma/client";
+import { AppError } from "../utils/appError";
+import { StatusCode } from "../constants/StatusCodes";
 
 // Hash Password before creating a user
 async function hashPassword(plainPassword: string) {
@@ -58,7 +60,7 @@ export async function loginUserService(userCredinitials: TUserLoginInput) {
 
     // If not correct password throw error
     if (!isCorrectPassword) {
-      throw Error("Invalid credentials.");
+      throw new AppError("Invalid credentials.", StatusCode.UNAUTHORIZED.code);
     }
 
     if (isCorrectPassword) {

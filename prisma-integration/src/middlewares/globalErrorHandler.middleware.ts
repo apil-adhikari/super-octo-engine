@@ -2,6 +2,7 @@ import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { StatusCode } from "../constants/StatusCodes";
 import { Prisma } from "@prisma/client";
+import { AppError } from "../utils/appError";
 
 export const globalErrorHandler: ErrorRequestHandler = (
   err: Error,
@@ -10,6 +11,15 @@ export const globalErrorHandler: ErrorRequestHandler = (
   next: NextFunction
 ): void => {
   console.error("-- In global error handler function --: ", err);
+
+  // Custom Error Message:
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      statusCode: err.statusCode,
+      status: err.status,
+      message: err.message,
+    });
+  }
 
   // 1) Zod Validation Error
   if (err instanceof ZodError) {

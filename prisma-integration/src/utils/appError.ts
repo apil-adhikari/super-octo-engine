@@ -1,17 +1,25 @@
-// // inheriting from AppError from Error class
-// export class AppError extends Error {
-//   public statusCode: number;
-//   public status: string;
-//   public isOperational: boolean;
+import { StatusEnum } from "../constants/StatusCodes";
 
-//   constructor(message: string, statusCode: number) {
-//     super(message);
+// inheriting from AppError from Error class
+export class AppError extends Error {
+  public statusCode: number;
+  public status: string;
+  public isOperational: boolean;
 
-//     this.statusCode = statusCode;
-//     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
-//     this.isOperational = true;
+  constructor(message: string, statusCode: number) {
+    super(message);
 
-//     // Printing in stack trace
-//     Error.captureStackTrace(this, this.constructor);
-//   }
-// }
+    this.statusCode = statusCode;
+    console.log(statusCode);
+
+    this.status = `${statusCode}`.startsWith("4")
+      ? StatusEnum.FAIL
+      : StatusEnum.ERROR;
+    this.isOperational = true;
+
+    console.log(this.status);
+
+    // Printing in stack trace
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
