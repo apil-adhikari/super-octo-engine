@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
+import { AppError } from "../utils/appError";
+import { StatusCode } from "../constants/StatusCodes";
 const prisma = new PrismaClient();
 
 // export interface JwtUserPayload extends JwtPayload {
@@ -38,8 +40,9 @@ export async function protect(
     //   message: "Not authorized, token missing",
     // });
 
-    throw new Error(
-      "Access token missing! Please login again to get access token."
+    throw new AppError(
+      "Access token missing! Please login again to get access token.",
+      StatusCode.UNAUTHORIZED.code
     );
   }
 

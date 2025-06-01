@@ -20,6 +20,7 @@ export const postBaseSchema = z.object({
   content: z.string().optional(),
   status: z.nativeEnum(PostStatus).optional(),
   authorId: z.number().int().positive("Author id must be positive."),
+  coverImage: z.string().optional(),
 });
 
 // all fields are requied except optional ones(content & status)
@@ -30,6 +31,7 @@ export const createPostSchema = postBaseSchema.pick({
   content: true,
   status: true,
   authorId: true,
+  coverImage: true,
 });
 
 // ✅ Update Schema: we should make all fields optional for PATCH updates

@@ -19,7 +19,7 @@ export class AppError extends Error {
 
     console.log(this.status);
 
-    // Printing in stack trace
+    // Printing in stack trace(only on development)
     Error.captureStackTrace(this, this.constructor);
   }
 }

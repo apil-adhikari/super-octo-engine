@@ -34,3 +34,26 @@ Delete a User
 ---
 
 Declaration Mergin: to add anything in the req.body because typescript doesnot allow us to directly create new data in req body
+
+---
+
+JUNE 1 2025:
+Task 1: Image Upload
+Recommended Popular Services:
+
+     🌥️ Cloudinary (Highly recommended — easy setup + transformations)
+     🗄️ Amazon S3
+
+we upload image to cloudinary using multer -> we then save the image url generated in the database
+
+     npm install multer cloudinary
+     npm install --save-dev @types/multer
+
+we need to get api keys & secrets from cloudinary
+
+if we use multipart/form-data, we need a way to handle it
+
+file upload -> file uploader middleware should take it and upload it to cloudinary and then it should return the url of the image so that it can be used on the controller to pass further
+
+I need to do:
+-create cloudinary config

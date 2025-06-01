@@ -1,33 +1,3 @@
-// import { NextFunction, Request, Response } from "express";
-// import {
-//   loginUserService,
-//   registerUserService,
-// } from "../services/auth.service";
-// import cookieParser from "cookie-parser";
-// import { StatusCode } from "../constants/StatusCodes";
-
-// import { NextFunction, Request, Response } from "express";
-// import { TCreateUserInput } from "../schemas/user.schema";
-// import { registerUserService } from "../services/auth.service";
-
-// const register = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     const data = await registerUserService(req.body);
-//     console.log("---AUTH CONTROLLER: REGISTER data---\n", data);
-
-//     res.status(201).json({
-//       status: "success",
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// export default { register, login };
-
-// -------------------------------------------------------------------------------------------------------------//
-
 import { NextFunction, Request, Response } from "express";
 import { TCreateUserInput } from "../schemas/user.schema";
 import {

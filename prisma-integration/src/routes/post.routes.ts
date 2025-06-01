@@ -13,6 +13,8 @@ import {
   updatePostSchema,
 } from "../schemas/post.schema";
 import { protect } from "../middlewares/protect.middleware";
+import upload from "../middlewares/multer.middleware";
+import { uploadToCloudinary } from "../middlewares/uploadToCloudinary.middleware";
 
 const postRouter = express.Router();
 // postRouter.route("/").post(createPost).get(getAllPosts);
@@ -21,7 +23,16 @@ const postRouter = express.Router();
 postRouter.get("/", getAllPosts);
 postRouter.get("/:id", getPost);
 
-postRouter.post("/", protect, validateData(createPostSchema), createPost);
+postRouter.post(
+  "/",
+  protect,
+
+  // file upload middleeware here!!
+  upload.single("coverImage"),
+  uploadToCloudinary,
+  validateData(createPostSchema),
+  createPost
+);
 postRouter.patch("/:id", protect, validateData(updatePostSchema), updatePost);
 
 postRouter.delete("/:id", protect, deletePost);

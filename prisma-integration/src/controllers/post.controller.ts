@@ -13,8 +13,8 @@ import {
   getPostService,
   updatePostService,
 } from "../services/post.service";
-import { number } from "zod";
 import { StatusCode } from "../constants/StatusCodes";
+import upload from "../middlewares/multer.middleware";
 
 export const createPost = async (
   req: AuthRequest,
@@ -26,6 +26,7 @@ export const createPost = async (
     const data = await createPostService({
       ...req.body,
       authorId: req.user?.id,
+      coverImage: req.file?.filename,
     });
 
     console.log(data);
@@ -37,10 +38,6 @@ export const createPost = async (
     });
   } catch (error) {
     next(error);
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
   }
 };
 
