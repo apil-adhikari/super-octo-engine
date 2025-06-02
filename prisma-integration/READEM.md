@@ -60,6 +60,15 @@ I need to do:
 
 ---
 
-- Update post
+- Update post ✅
 - If post deleted ->delete the cover too
 - If updated ->delete the old cover & upload new image
+
+✅ Delete Post
+
+- Allow the author to delete the post
+  Get all Posts and get post done✅
+
+  ***
+
+t2: UPLOAD USER PROFILE IMAGE

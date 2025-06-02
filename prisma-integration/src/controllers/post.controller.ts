@@ -109,6 +109,7 @@ export const getPost = async (
     console.log(data);
 
     res.status(200).json({
+      statusCode: StatusCode.OK.code,
       status: "success",
       data,
     });
@@ -127,6 +128,8 @@ export const getAllPosts = async (
     console.log(data);
 
     res.status(200).json({
+      total: `${data.length} posts found`,
+      statusCode: StatusCode.OK.code,
       status: "success",
       data,
     });
