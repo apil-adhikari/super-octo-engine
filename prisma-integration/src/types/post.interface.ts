@@ -15,3 +15,7 @@ export interface UpdatePostInterface {
   content?: string;
   status?: PostStatusType;
 }
+
+export interface GetUserReuest extends Request {
+  params: { id: string };
+}

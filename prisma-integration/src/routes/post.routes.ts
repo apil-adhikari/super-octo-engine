@@ -6,9 +6,42 @@ import {
   getPost,
   getAllPosts,
 } from "../controllers/post.controller";
+import { validateData } from "../middlewares/validation.middleware";
+import {
+  createPostSchema,
+  postResponseSchema,
+  updatePostSchema,
+} from "../schemas/post.schema";
+import { protect } from "../middlewares/protect.middleware";
+import upload from "../middlewares/multer.middleware";
+import { uploadToCloudinary } from "../middlewares/uploadToCloudinary.middleware";
 
 const postRouter = express.Router();
-postRouter.route("/").post(createPost).get(getAllPosts);
-postRouter.route("/:id").patch(updatePost).delete(deletePost).get(getPost);
+// postRouter.route("/").post(createPost).get(getAllPosts);
+// postRouter.route("/:id").patch(updatePost).delete(deletePost).get(getPost);
+
+postRouter.get("/", getAllPosts);
+postRouter.get("/:id", getPost);
+
+postRouter.post(
+  "/",
+  protect,
+
+  // file upload middleeware here!!
+  upload.single("coverImage"),
+  uploadToCloudinary,
+  validateData(createPostSchema),
+  createPost
+);
+postRouter.patch(
+  "/:id",
+  protect,
+  upload.single("coverImage"),
+  uploadToCloudinary,
+  validateData(updatePostSchema),
+  updatePost
+);
+
+postRouter.delete("/:id", protect, deletePost);
 
 export default postRouter;

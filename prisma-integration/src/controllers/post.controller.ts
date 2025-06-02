@@ -1,8 +1,11 @@
-import { Request, response, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import {
   CreatePostInputInterface,
   UpdatePostInterface,
 } from "../types/post.interface";
+
+import { AuthRequest } from "../middlewares/protect.middleware";
+
 import {
   createPostService,
   deletePostService,
@@ -10,78 +13,95 @@ import {
   getPostService,
   updatePostService,
 } from "../services/post.service";
+import { StatusCode } from "../constants/StatusCodes";
 
 export const createPost = async (
-  req: Request<{}, {}, CreatePostInputInterface>,
-  res: Response
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const data = await createPostService(req.body);
-    console.log(data);
+    console.log("In create post: ", req.user?.id);
+    const data = await createPostService({
+      ...req.body,
+      authorId: req.user?.id,
+      coverImage: req.file?.filename,
+    });
 
-    res.status(201).json({
-      status: "success",
+    res.status(StatusCode.CREATED.code).json({
+      statusCode: StatusCode.CREATED.code,
+      status: StatusCode.CREATED.status,
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    next(error);
   }
 };
 
 export const updatePost = async (
-  req: Request<{ id: string }, {}, UpdatePostInterface>,
-  res: Response
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    console.log("HERE at updatePost");
-    const postId = parseInt(req.params.id);
+    console.log("POST UPDATE");
+    const postId = parseInt(req.params.id); // post to update
+
+    // Data to be updated(selective data)
     const { title, description, content, status } = req.body;
+
     const data = await updatePostService(postId, {
       title,
       description,
       content,
       status,
+      authorId: req.user?.id, // we need to get the logged
+      coverImage: req.file?.filename,
     });
 
-    console.log(data);
-    res.status(200).json({
-      status: "success",
+    res.status(StatusCode.ACCEPTED.code).json({
+      StatusCode: StatusCode.ACCEPTED.code,
+      status: StatusCode.ACCEPTED.status,
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    console.log(error);
+    next(error);
   }
 };
 
 export const deletePost = async (
-  req: Request<{ id: string }, {}, {}>,
-  res: Response
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id);
-    const data = await deletePostService(postId);
-    res.status(204).json({
-      status: "success",
+    console.log("Logged in user: ", req.user?.id);
+    if (!req.user?.id) {
+      throw new Error("Unauthorized");
+    }
+
+    const userId = req.user.id;
+
+    const postId: number = parseInt(req.params.id);
+
+    const data = await deletePostService(postId, userId);
+
+    res.status(StatusCode.DELETED.code).json({
+      statusCode: StatusCode.DELETED.code,
+      status: StatusCode.DELETED.status,
       message: "Post deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    next(error);
   }
 };
 
 // GET ALL POSTS
 export const getPost = async (
   req: Request<{ id: string }, {}, {}>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const postId = parseInt(req.params.id);
@@ -89,25 +109,31 @@ export const getPost = async (
     console.log(data);
 
     res.status(200).json({
+      statusCode: StatusCode.OK.code,
       status: "success",
       data,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getAllPosts = async (req: Request, res: Response) => {
+export const getAllPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await getAllPostsService();
     console.log(data);
 
     res.status(200).json({
+      total: `${data.length} posts found`,
+      statusCode: StatusCode.OK.code,
       status: "success",
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "success",
-      message: error,
-    });
+    next(error);
   }
 };
