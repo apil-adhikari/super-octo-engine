@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   CreateUserInput,
   CreateUserRequest,
@@ -31,7 +31,11 @@ import { createUserSchema } from "../schemas/user.schema";
 //   }
 // };
 // -------------------------------------------------------------- //
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     // TODO: Difference between .parse and .safeParse
     const parsedInput = createUserSchema.parse(req.body);
@@ -43,10 +47,7 @@ export const createUser = async (req: Request, res: Response) => {
       data,
     });
   } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error,
-    });
+    next(error);
   }
 };
 

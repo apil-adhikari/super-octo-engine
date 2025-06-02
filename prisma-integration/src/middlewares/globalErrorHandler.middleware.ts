@@ -5,72 +5,67 @@ import { Prisma } from "@prisma/client";
 import { AppError } from "../utils/appError";
 
 export const globalErrorHandler: ErrorRequestHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
+  err,
+  req,
+  res,
+  next
 ): void => {
   console.error("-- In global error handler function --: ", err);
 
-  // Custom Error Message:
+  // 0) Custom AppError
   if (err instanceof AppError) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       statusCode: err.statusCode,
       status: err.status,
       message: err.message,
-    });
+    }) as unknown as void;
   }
 
   // 1) Zod Validation Error
   if (err instanceof ZodError) {
-    res.status(StatusCode.BAD_REQUEST.code).json({
+    return res.status(StatusCode.BAD_REQUEST.code).json({
       status: StatusCode.BAD_REQUEST.status,
-      message: err,
+      message: "Validation error",
       errors: err.errors.map((e) => e.message),
-    });
-    return; // just return void after sending response
+    }) as unknown as void;
   }
 
   // 2) Prisma Known Request Errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     switch (err.code) {
-      case "P2002": // Unique constraint violation
-        res.status(StatusCode.CONFLICT.code).json({
+      case "P2002":
+        return res.status(StatusCode.CONFLICT.code).json({
           status: StatusCode.CONFLICT.status,
           message: "Unique constraint violation.",
           meta: err.meta,
-        });
-        return;
+        }) as unknown as void;
 
-      case "P2025": // Record not found
-        res.status(StatusCode.NOT_FOUND.code).json({
+      case "P2025":
+        return res.status(StatusCode.NOT_FOUND.code).json({
           status: StatusCode.NOT_FOUND.status,
           message: "Record not found.",
-        });
-        return;
+        }) as unknown as void;
 
-      case "P2003": // Foreign key constraint failed
-        res.status(StatusCode.BAD_REQUEST.code).json({
+      case "P2003":
+        return res.status(StatusCode.BAD_REQUEST.code).json({
           status: StatusCode.BAD_REQUEST.status,
           message: "Foreign key constraint failed.",
-        });
-        return;
+        }) as unknown as void;
 
       default:
         console.error("Unhandled Prisma error:", err);
-        res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+        return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
           status: StatusCode.INTERNAL_SERVER_ERROR.status,
           message: "Database error occurred.",
-        });
-        return;
+        }) as unknown as void;
     }
   }
 
   // 3) Fallback for any other error
-  res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
+  return res.status(StatusCode.INTERNAL_SERVER_ERROR.code).json({
     status: "error",
     fallback: true,
     message: err.message || "Internal Server Error",
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
-  });
+  }) as unknown as void;
 };
