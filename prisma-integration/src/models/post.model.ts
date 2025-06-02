@@ -5,6 +5,8 @@ import { StatusCode } from "../constants/StatusCodes";
 const prisma = new PrismaClient();
 
 export class PostModel {
+  // Check for existing post❌ -> this to the service layer -> no trycatch or throwing errors
+
   static async createPostModel(postData: Prisma.PostUncheckedCreateInput) {
     return await prisma.post.create({
       data: postData,
@@ -15,7 +17,7 @@ export class PostModel {
     postId: number,
     updatePostData: Prisma.PostUncheckedUpdateInput
   ) {
-    // Check for existing post
+    // Check for existing post❌ -> this to the service layer
     const existingPost = await prisma.post.findUnique({
       where: {
         id: postId,
@@ -32,8 +34,8 @@ export class PostModel {
     }
 
     // Check if the user trying to update the post is the author of the post
-    console.log("author trying to update: ", updatePostData.authorId);
-    console.log("Actual Author: ", existingPost.authorId);
+    // console.log("author trying to update: ", updatePostData.authorId);
+    // console.log("Actual Author: ", existingPost.authorId);
     // console.log(updatePostData);
 
     // Check if the author of the post in db matches the user trying to update it

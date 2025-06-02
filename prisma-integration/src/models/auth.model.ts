@@ -8,19 +8,21 @@ const prisma = new PrismaClient();
 class AuthModel {
   // register user
   static async registerUserModel(userData: Prisma.UserCreateInput) {
-    // Check if the user exists with the email address:
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: userData.email,
-      },
-    });
+    // ONLY DO DB OPERATION HERE:
 
-    if (existingUser) {
-      throw new AppError(
-        "User already exists with that email address. Please use different email or login",
-        StatusCode.CONFLICT.code
-      );
-    }
+    // Check if the user exists with the email address:
+    // const existingUser = await prisma.user.findUnique({
+    //   where: {
+    //     email: userData.email,
+    //   },
+    // });
+
+    // if (existingUser) {
+    //   throw new AppError(
+    //     "User already exists with that email address. Please use different email or login",
+    //     StatusCode.CONFLICT.code
+    //   );
+    // }
 
     const newUser = await prisma.user.create({
       data: userData,
