@@ -28,6 +28,7 @@ class AuthModel {
         id: true,
         name: true,
         email: true,
+        profilePicture: true,
       },
     });
 

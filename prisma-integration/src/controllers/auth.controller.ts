@@ -43,7 +43,10 @@ export async function register(
   next: NextFunction
 ) {
   try {
-    const data = await registerUserService(req.body);
+    const data = await registerUserService({
+      ...req.body,
+      profilePicture: req.file?.filename,
+    });
     console.log("---AUTH CONTROLLER: REGISTER data---\n", data);
 
     res.status(StatusCode.CREATED.code).json({

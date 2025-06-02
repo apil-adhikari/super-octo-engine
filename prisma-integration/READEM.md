@@ -72,3 +72,4 @@ I need to do:
   ***
 
 t2: UPLOAD USER PROFILE IMAGE
+-> create schema
