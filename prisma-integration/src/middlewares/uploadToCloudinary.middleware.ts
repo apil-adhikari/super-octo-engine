@@ -27,7 +27,7 @@ export async function uploadToCloudinary(
       throw new AppError("Please upload the file", StatusCode.BAD_REQUEST.code);
     }
 
-    // If no file is uploaded during PATCH, skip Cloudinary upload
+    // If no file is uploaded during PATCH, we need to skip Cloudinary upload
     if (!file) {
       console.log("🟡 No file uploaded – skipping Cloudinary upload.");
       return next();

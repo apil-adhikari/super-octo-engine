@@ -12,7 +12,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
 ): void => {
   console.error("-- In global error handler function --: ", err);
 
-  // 0) Custom AppError
+  // Custom AppError
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       statusCode: err.statusCode,

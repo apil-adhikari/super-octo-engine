@@ -71,5 +71,10 @@ I need to do:
 
   ***
 
-t2: UPLOAD USER PROFILE IMAGE
--> create schema
+t2: UPLOAD USER PROFILE IMAGE ✅
+
+ERROR FIX: cannot set headers after they are sent to client: `Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'` => we explicitely retuned void for type saftey and also did type assertion `as unknown as void; // Tell TypeScript to treat this as void` when sending the response
+
+schame->pick the file from the req.file.filename set by the uploadToCloudinary middleeware and pass it to services -> model and then send response
+
+t3:
