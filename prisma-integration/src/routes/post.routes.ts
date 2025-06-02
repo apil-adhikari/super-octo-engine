@@ -33,7 +33,14 @@ postRouter.post(
   validateData(createPostSchema),
   createPost
 );
-postRouter.patch("/:id", protect, validateData(updatePostSchema), updatePost);
+postRouter.patch(
+  "/:id",
+  protect,
+  upload.single("coverImage"),
+  uploadToCloudinary,
+  validateData(updatePostSchema),
+  updatePost
+);
 
 postRouter.delete("/:id", protect, deletePost);
 

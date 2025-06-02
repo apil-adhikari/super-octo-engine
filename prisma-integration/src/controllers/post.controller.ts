@@ -14,7 +14,6 @@ import {
   updatePostService,
 } from "../services/post.service";
 import { StatusCode } from "../constants/StatusCodes";
-import upload from "../middlewares/multer.middleware";
 
 export const createPost = async (
   req: AuthRequest,
@@ -28,8 +27,6 @@ export const createPost = async (
       authorId: req.user?.id,
       coverImage: req.file?.filename,
     });
-
-    console.log(data);
 
     res.status(StatusCode.CREATED.code).json({
       statusCode: StatusCode.CREATED.code,
@@ -47,6 +44,7 @@ export const updatePost = async (
   next: NextFunction
 ) => {
   try {
+    console.log("POST UPDATE");
     const postId = parseInt(req.params.id); // post to update
 
     // Data to be updated(selective data)
@@ -58,6 +56,7 @@ export const updatePost = async (
       content,
       status,
       authorId: req.user?.id, // we need to get the logged
+      coverImage: req.file?.filename,
     });
 
     res.status(StatusCode.ACCEPTED.code).json({

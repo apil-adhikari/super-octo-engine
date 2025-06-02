@@ -32,14 +32,14 @@ export class PostModel {
     }
 
     // Check if the user trying to update the post is the author of the post
-    // console.log("author trying to update: ", typeof updatePostData.authorId);
-    // console.log("Actual Author: ", typeof existingPost.authorId);
+    console.log("author trying to update: ", updatePostData.authorId);
+    console.log("Actual Author: ", existingPost.authorId);
     // console.log(updatePostData);
 
     // Check if the author of the post in db matches the user trying to update it
     if (existingPost.authorId != updatePostData.authorId) {
       throw new AppError(
-        "You are not the owner/author of this post. You cannot update this post",
+        "You are not the owner or author of this post. You cannot update this post",
         StatusCode.FORBIDDEN.code
       );
     }

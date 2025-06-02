@@ -13,7 +13,8 @@ export const updatePostService = async (
   postId: number,
   updatePostData: TUpdatePostInput
 ) => {
-  return await PostModel.updatePostModel(postId, updatePostData);
+  const data = await PostModel.updatePostModel(postId, updatePostData);
+  return data;
 };
 
 export const deletePostService = async (postId: number, userId: number) => {

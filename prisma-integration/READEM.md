@@ -57,3 +57,9 @@ file upload -> file uploader middleware should take it and upload it to cloudina
 
 I need to do:
 -create cloudinary config
+
+---
+
+- Update post
+- If post deleted ->delete the cover too
+- If updated ->delete the old cover & upload new image

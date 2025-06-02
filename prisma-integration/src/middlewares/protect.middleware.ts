@@ -21,35 +21,36 @@ export async function protect(
   res: Response,
   next: NextFunction
 ) {
-  console.log("In protecte middleware:");
-  let token: string = "";
-  console.log(req.headers);
-  // check in request header and as well as in cookies if the token exists
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies && req.cookies.token) {
-    token = req.cookies.token;
-  }
-
-  if (!token) {
-    // res.status(401).json({
-    //   status: "fail",
-    //   message: "Not authorized, token missing",
-    // });
-
-    throw new AppError(
-      "Access token missing! Please login again to get access token.",
-      StatusCode.UNAUTHORIZED.code
-    );
-  }
-
-  console.log("TOKEN: ", token);
-
   try {
+    console.log("In protecte middleware:");
+    let token: string = "";
+    console.log(req.headers);
+    // check in request header and as well as in cookies if the token exists
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) {
+      // res.status(401).json({
+      //   status: "fail",
+      //   message: "Not authorized, token missing",
+      // });
+
+      throw new AppError(
+        "Access token missing! Please login again to get access token.",
+        StatusCode.UNAUTHORIZED.code
+      );
+    }
+
+    console.log("TOKEN: ", token);
+
     // Get the decoded value using jwt and verify it:
+    console.log("HERE");
     const decoded = jwt.verify(token, JWT_SECRET_KEY) as JwtPayload;
     console.log("USER ID: ", decoded.id);
 
